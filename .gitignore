@@ -1,0 +1,18 @@
+# Downloads and pinned tool binaries fetched by scripts/lint-lua.sh and
+# lib/neovim.sh. Everything here is reproducible from packages/versions.env.
+.cache/
+
+# Anything a machine-local override could be called. The tracked files are the
+# ones bootstrap.sh links; the local ones are created in $HOME and never here.
+local.zsh
+local.conf
+local.config
+*.local
+
+# Editors and operating systems
+.*.swp
+.*.swo
+*~
+.DS_Store
+.idea/
+.vscode/
