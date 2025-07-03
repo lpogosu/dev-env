@@ -1,0 +1,21 @@
+# Global gitignore: only things that are an artefact of *this machine*, never
+# things that belong to a project. A build directory is the project's business
+# and belongs in the project's .gitignore; an editor swap file is not.
+
+# Editors
+.*.swp
+.*.swo
+*~
+.nvimlog
+
+# Operating systems
+.DS_Store
+Thumbs.db
+
+# Direnv and local tool state
+.direnv/
+.envrc.local
+
+# Anything explicitly marked as local by name
+*.local
+local.env

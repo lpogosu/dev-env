@@ -1,0 +1,99 @@
+# Git. No identity here on purpose — see [user] below.
+
+[user]
+	# No name and no email in a tracked file. useConfigOnly makes git refuse to
+	# invent an identity from $USER and the hostname, so a machine where
+	# local.config was never filled in fails at the first commit with a clear
+	# message instead of producing commits authored by root@buildbox.
+	useConfigOnly = true
+
+[init]
+	defaultBranch = main
+
+[core]
+	excludesFile = ~/.config/git/ignore
+	# Never rewrite line endings in the object database. A repository that
+	# contains a shell script and is cloned on Windows must still contain LF.
+	autocrlf = false
+	editor = nvim
+
+[column]
+	ui = auto
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = version:refname
+
+[diff]
+	# Move detection: a block that moved is shown as moved rather than as one
+	# large deletion next to one large addition.
+	colorMoved = zebra
+	colorMovedWS = allow-indentation-change
+	algorithm = histogram
+	mnemonicPrefix = true
+	renames = true
+
+[merge]
+	# The diff3 style keeps the common ancestor in the conflict block. Without
+	# it a conflict shows two versions and no way to tell which side changed
+	# what.
+	conflictStyle = zdiff3
+
+[rerere]
+	# Record conflict resolutions and replay them. This is what makes a long
+	# rebase across a renamed file survivable.
+	enabled = true
+	autoupdate = true
+
+[rebase]
+	autosquash = true
+	autostash = true
+	updateRefs = true
+
+[pull]
+	# No implicit merge and no implicit rebase. `git pull` on a diverged branch
+	# should stop and let the person decide.
+	ff = only
+
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+
+[status]
+	showUntrackedFiles = all
+	submoduleSummary = true
+
+[log]
+	date = iso
+
+[transfer]
+	# Verify object connectivity on receive. Costs a little on huge fetches and
+	# catches a corrupted object at the moment it arrives rather than a month
+	# later.
+	fsckObjects = true
+
+[alias]
+	s = status --short --branch
+	lg = log --graph --abbrev-commit --date=relative --format='%C(auto)%h %C(blue)%ad%C(auto)%d %s %C(dim)%an'
+	last = log -1 --stat
+	unstage = restore --staged
+	amend = commit --amend --no-edit
+	# Every branch with its last commit date, most recent first.
+	branches = branch --sort=-committerdate --format='%(align:24)%(refname:short)%(end) %(committerdate:relative)'
+	# What is on this branch and not on main.
+	ahead = log --oneline main..HEAD
+
+[include]
+	# Last, because git keeps the last value it reads for a single-valued key.
+	# An include at the top of the file would be silently overridden by
+	# everything below it. (ssh_config is the opposite — see ~/.ssh/config.)
+	# This file is created empty by bootstrap.sh and is never tracked; it is
+	# where the identity for this particular machine goes.
+	path = ~/.config/git/local.config
