@@ -1,0 +1,30 @@
+# Single source of truth for packages. Tab-separated.
+#
+#   tool     the thing being asked for, used only in this file
+#   debian   apt package name, "-" if the base system already provides it
+#   fedora   dnf package name
+#   brew     Homebrew formula name
+#
+# packages/debian.txt, packages/fedora.txt and packages/Brewfile are generated
+# from this file by scripts/gen-packages.sh. Editing them directly is caught by
+# `make packages-check` and by CI.
+#
+# tool	debian	fedora	brew
+zsh	zsh	zsh	zsh
+zsh-autosuggestions	zsh-autosuggestions	zsh-autosuggestions	zsh-autosuggestions
+zsh-syntax-highlighting	zsh-syntax-highlighting	zsh-syntax-highlighting	zsh-syntax-highlighting
+tmux	tmux	tmux	tmux
+ncurses-term	ncurses-term	ncurses-term	-
+git	git	git	git
+openssh-client	openssh-client	openssh-clients	-
+ca-certificates	ca-certificates	ca-certificates	-
+curl	curl	curl	-
+diffutils	diffutils	diffutils	-
+tar	tar	tar	-
+gzip	gzip	gzip	-
+less	less	less	-
+fzf	fzf	fzf	fzf
+ripgrep	ripgrep	ripgrep	ripgrep
+fd	fd-find	fd-find	fd
+jq	jq	jq	jq
+neovim	-	-	neovim
