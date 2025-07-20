@@ -1,0 +1,55 @@
+---
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: shellcheck, stylua, package manifest
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4.2.2
+
+      - name: ShellCheck
+        run: ./scripts/lint-sh.sh
+
+      - name: StyLua
+        run: ./scripts/lint-lua.sh
+
+      - name: Package lists match the manifest
+        run: ./scripts/gen-packages.sh --check
+
+  container:
+    name: bootstrap on ${{ matrix.image }}
+    runs-on: ubuntu-24.04
+    needs:
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - debian:12-slim
+          - fedora:41
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4.2.2
+
+      # The whole suite runs inside the image: bootstrap end to end, the
+      # behavioural assertions, a second bootstrap that must report changed=0,
+      # and the startup benchmark. RUNS is lowered because a hosted runner is
+      # noisy enough that fifty iterations buy no extra confidence.
+      - name: Run the suite
+        run: IMAGES='${{ matrix.image }}' RUNS=20 ./tests/run.sh
